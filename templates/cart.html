@@ -1,0 +1,253 @@
+{% load static %}
+{% static "images" as baseUrl %}
+{% load carttemplate_tag %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:font-size="http://www.w3.org/1999/xhtml"
+	  xmlns:color="http://www.w3.org/1999/xhtml">
+  <title>Your cart</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"  rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+
+
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body class="goto-here">
+		{% csrf_token %}
+		{% include 'navigation.html' %}
+
+    <div class="hero-wrap hero-bread" style="background-image: url({% static 'images/bg_1.jpg' %});">
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Cart</span></p>
+            <h1 class="mb-0 bread">My Cart</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ftco-section ftco-cart">
+			<div class="container">
+				<div class="row">
+    			<p class="col-md-12 ftco-animate">
+    				<div class="cart-list">
+	    				<table class="table">
+						    <thead class="thead-primary">
+						      <tr class="text-center">
+						        <th>&nbsp;</th>
+						        <th>&nbsp;</th>
+						        <th>Product name</th>
+						        <th>Price</th>
+						        <th>Quantity</th>
+						        <th>Total</th>
+						      </tr>
+						    </thead>
+						    <tbody>
+
+							{% for message in messages %}
+							{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+        						<div class="alert alert-info" role="info">
+            					{{ message }}
+								<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        						</div>
+							 {% endif %}
+							{% endfor %}
+							{% for item in item.items.all %}
+
+						      <tr class="text-center">
+						        <td ><a href="{% url 'remove_from_cart' item.item.id %}"><i class="fas fa-trash-alt" style="font-size:18px; color:red;"></i></a></td>
+								  {% if request.user|cart_item_count  < 2  %} your cart is empty
+
+							{% endif %}
+
+						        <td class="image-prod"><img class="img-fluid" src="{{item.item.image.url}}"  width="100" height="100"></div></td>
+
+						        <td class="product-name">
+									<h3>{{item.item}}</h3>
+
+						        </td>
+
+
+
+						        <td class="price">
+										{% if item.item.offer%}
+									<del><span>$ {{item.item.price }} </span> </del>
+										{% endif %}
+									<span> $ {{item.item.offer_price}} </span></td>
+
+
+						        <td class="quantity">
+
+									<div>	<p style="color:black;"><a href="{% url 'remove_single_item_from_cart' item.item.id %}"><i class="fas fa-minus mr-3 "  style="color:black" onresize=""></i></a><span>{{item.quantity}}</span>
+										<a href="{% url 'add_single_item_to_cart' item.item.id %}"> <i class="fas fa-plus ml-3" style="color:black"></i></a></p>
+					          	</div>
+					          </td>
+						        <td class="total">{{item.get_total_item_price}}</td>
+						      </tr><!-- END TR-->
+								{% endfor %}
+						    </tbody>
+						  </table>
+					  </div>
+    			</div>
+    		</div>
+    		<div class="row justify-content-end">
+    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+    				<div class="cart-total mb-">
+    					<h3>Shipping address</h3>
+    					<p>Enter your adress to get a shipping estimate</p>
+  						<form action="#" class="info">
+	              <div class="form-group">
+	              	<label for="">Address</label>
+	                <input type="text" class="form-control text-left px-3" placeholder="">
+	              </div>
+	              <div class="form-group">
+	              	<label for="country">State</label>
+	                <input type="text" class="form-control text-left px-3" placeholder="">
+	              </div>
+	              <div class="form-group">
+	              	<label for="country">PinCode</label>
+	                <input type="text" class="form-control text-left px-3" placeholder="">
+	              </div>
+	            </form>
+    				</div>
+    				<p><a href="checkout.html" class="btn btn-primary py-3 px-4">Estimate</a></p>
+    			</div>
+
+    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+    				<div class="cart-total mb-3">
+						 <td colspan="5" > <h2 style="color:green;"> <b> Cart total </b></h2></td>
+    					<p class="d-flex">
+    						<span>Subtotal</span>
+    						<span>$ {{ item.get_total }}</span>
+    					</p>
+    					<p class="d-flex">
+    						<span>Delivery</span>
+    						<span>$0.00</span>
+    					</p>
+    					<p class="d-flex">
+    						<span>Discount</span>
+    						<span>$0.00</span>
+    					</p>
+    					<hr>
+    					<p class="d-flex total-price">
+    						<span style="color:green;font-weight:bold">Total</span>
+    						<span style="color:green;font-weight:bold">$ {{ item.get_total }}</span>
+    					</p>
+    				</div>
+    				<p><a href="checkout.html" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+    			</div>
+    		</div>
+			</div>
+		</section>
+
+		<section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
+      <div class="container py-4">
+        <div class="row d-flex justify-content-center py-5">
+          <div class="col-md-6">
+          	<h2 style="font-size: 22px;" class="mb-0">Subcribe to our Newsletter</h2>
+          	<span>Get e-mail updates about our latest shops and special offers</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-center">
+            <form action="#" class="subscribe-form">
+              <div class="form-group d-flex">
+                <input type="text" class="form-control" placeholder="Enter email address">
+                <input type="submit" value="Subscribe" class="submit px-3">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% include "footer.html" %}
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.alert {
+  padding: 5px;
+  background-color: #f44336;
+  color: white;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+
+  transition: 0.5s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+</style>
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+		<script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'js/scrollax.min.js' %}"></script>
+
+  <script src="{% static 'js/main.js' %}"></script>
+
+
+  </body>
+</html>
